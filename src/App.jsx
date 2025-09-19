@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import cbLogo from './assets/codebeamer.svg'
 import './App.css'
-import ConnectionSetup from './pages/ConnectionSetup'
+// import ConnectionSetup from './pages/connectionSetup.jsx'
+// import GenerateItems from './pages/GenerateItems.jsx'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -20,7 +21,6 @@ function App() {
         </button>
       </div>
       <div>
-        <ConnectionSetup></ConnectionSetup>
       </div>
     </>
   )

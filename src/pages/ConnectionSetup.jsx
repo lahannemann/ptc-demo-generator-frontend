@@ -19,9 +19,7 @@ function ConnectionSetup() {
             <div >
                 <div style={{display: "flex", alignItems:"center", gap: "1rem"}}>
                     <h4>URL</h4>
-                    <label>
-                        <input type="text" placeholder='Paste URL'/>
-                    </label>
+                    <input type="text" placeholder='Paste URL'/>
                 </div>
                 <div style={{display: "flex", alignItems:"center", gap: "1rem"}}>
                     <h4>Username</h4>
