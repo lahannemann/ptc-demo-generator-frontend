@@ -1,11 +1,20 @@
 import { useState } from 'react'
 import cbLogo from './assets/codebeamer.svg'
 import './App.css'
-// import ConnectionSetup from './pages/connectionSetup.jsx'
+
+// imports all of the page components
+import ConnectionSetup from './pages/connectionSetup.jsx'
 // import GenerateItems from './pages/GenerateItems.jsx'
+import GenerateTraceability from './pages/GenerateTraceability.jsx'
+import UpdateItemStatuses from './pages/UpdateItemStatuses.jsx'
+import UpdateItemMetadata from './pages/UpdateItemMetadata.jsx'
+import TestRunGenerator from './pages/TestRunGenerator.jsx'
+import GenerateTestSteps from './pages/GenerateTestSteps.jsx'
+import DeleteAllProjectData from './pages/DeleteAllProjectData.jsx'
+import DeleteAllTrackerData from './pages/DeleteAllTrackerData.jsx'
+import BatchItemGenerator from './pages/BatchItemGeneration.jsx'
 
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
     <>
@@ -15,12 +24,16 @@ function App() {
         </a>
       </div>
       <h1>Codebeamer AI Demo Generator</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-      </div>
       <div>
+        <ConnectionSetup></ConnectionSetup>
+        <GenerateTraceability></GenerateTraceability>
+        <UpdateItemStatuses></UpdateItemStatuses>
+        <UpdateItemMetadata></UpdateItemMetadata>
+        <TestRunGenerator></TestRunGenerator>
+        <GenerateTestSteps></GenerateTestSteps>
+        <DeleteAllProjectData></DeleteAllProjectData>
+        <DeleteAllTrackerData></DeleteAllTrackerData>
+        <BatchItemGenerator></BatchItemGenerator>
       </div>
     </>
   )
