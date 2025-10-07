@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import NavBar from './components/Navbar.jsx';
 import cbLogo from './assets/codebeamer.svg';
@@ -18,9 +18,33 @@ import BatchItemGenerator from './pages/BatchItemGeneration.jsx';
 
 function App() {
 
+  const [backendError, setBackendError] = useState(false);
+
+  useEffect(() => {
+    const pingBackend = async () => {
+      try {
+        const res = await fetch('http://localhost:8000/api/greet');
+        if (!res.ok) throw new Error('Server error');
+        await res.json(); // you can log this if needed
+      } catch (err) {
+        console.error('Backend unreachable:', err);
+        setBackendError(true);
+      }
+    };
+
+    pingBackend();
+  }, []);
+
+
+
   return (
     <>
       <div>
+        {backendError && (
+          <div style={{ color: 'red', padding: '1rem' }}>
+            ⚠️ Server is unavailable. Please try again later.
+          </div>
+        )}
         <a href="https://www.ptc.com/en/products/codebeamer" target="_blank">
           <img src={cbLogo} className="logo" alt="Codebeamer logo" />
         </a>
