@@ -1,5 +1,6 @@
-// import statements here
 import React, { useState } from 'react';
+import Popup from 'reactjs-popup';
+import 'reactjs-popup/dist/index.css';
 
 
 function ConnectionSetup() {
@@ -10,9 +11,12 @@ function ConnectionSetup() {
     const [responseMessage, setResponseMessage] = useState('');
     const [isConnected, setIsConnected] = useState(false);
     const [productName, setProductName] = useState('');
+    const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+    const [showConnectFailurePopup, setShowConnectFailurePopup] = useState(false);
+    const [showProductPopup, setShowProductPopup] = useState(false);
 
 
-    // get input from user typing later
+
     const handleConnect = async () => {
         try {
             const res = await fetch('http://localhost:8000/api/connect', {
@@ -30,10 +34,12 @@ function ConnectionSetup() {
             const data = await res.json();
             setIsConnected(true);
             setResponseMessage('');
+            setShowSuccessPopup(true); // Show popup on success
         } catch (err) {
             console.error('Error connecting:', err);
             setIsConnected(false); 
-            setResponseMessage(err.message);        
+            setResponseMessage(err.message);
+            setShowConnectFailurePopup(true); // show popup notifying connection failure        
         }
     };
     
@@ -60,6 +66,7 @@ function ConnectionSetup() {
             }
 
             const data = await res.json();
+            setShowProductPopup(true); // Show popup on success
         } catch (err) {
             console.error('Error setting product:', err);
             setResponseMessage(err.message);
@@ -131,6 +138,7 @@ function ConnectionSetup() {
                     Disconnect
                 </button>
             )}
+
             
             {isConnected && (
                 <>
@@ -152,6 +160,31 @@ function ConnectionSetup() {
                     </div>
                 </>
             )}
+
+            <Popup open={showSuccessPopup} onClose={() => setShowSuccessPopup(false)} modal>
+                <div style={{ padding: '1rem' }}>
+                    <h3>✅ Connected Successfully!</h3>
+                    <p>You are now connected to Codebeamer.</p>
+                    <button onClick={() => setShowSuccessPopup(false)}>Close</button>
+                </div>
+            </Popup>
+
+            <Popup open={showConnectFailurePopup} onClose={() => setShowConnectFailurePopup(false)} modal>
+                <div style={{ padding: '1rem' }}>
+                    <h3>‼️ Failure to Connect</h3>
+                    <p>Check credentials and try again to connect to Codebeamer</p>
+                    <button onClick={() => setShowConnectFailurePopup(false)}>Close</button>
+                </div>
+            </Popup>
+
+            <Popup open={showProductPopup} onClose={() => setShowProductPopup(false)} modal>
+                <div style={{ padding: '1rem' }}>
+                    <h3>✅ Product Set Successfully!</h3>
+                    <p>The product <strong>{productName}</strong> has been configured.</p>
+                    <button onClick={() => setShowProductPopup(false)}>Close</button>
+                </div>
+            </Popup>
+
 
         </div>
     )
