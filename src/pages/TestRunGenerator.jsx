@@ -2,6 +2,7 @@
 
 function TestRunGenerator() {
     // add constants later
+    const sessionReady = useSessionGuard();
 
     return (
         <div>

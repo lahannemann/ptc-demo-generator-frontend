@@ -2,6 +2,8 @@
 import React, { useState, useEffect } from 'react';
 
 function GenerateTraceability() {
+    const sessionReady = useSessionGuard();
+
     // useState or constants initialized later
     const [projectNames, setProjectNames] = useState([]);
     const [responseMessage, setResponseMessage] = useState('');
@@ -20,6 +22,7 @@ function GenerateTraceability() {
 
 
     useEffect(() => {
+        if (!sessionReady) return;
         const fetchProjectNames = async () => {
             try {
             const res = await fetch('http://localhost:8000/api/projects', {
@@ -41,7 +44,7 @@ function GenerateTraceability() {
         };
 
         fetchProjectNames();
-    }, []);
+    }, [sessionReady]);
 
     const handleUpstreamProjectSelect = async (e) => {
         const projectName = e.target.value;

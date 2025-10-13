@@ -2,6 +2,7 @@
 
 function GenerateTestSteps() {
     // constants to be added later
+    const sessionReady = useSessionGuard();
 
     return (
         <div>

@@ -2,6 +2,7 @@
 
 function UpdateItemStatuses() {
     // state variables or constants later
+    const sessionReady = useSessionGuard();
 
     return (
         <div>
