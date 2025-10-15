@@ -2,6 +2,7 @@
 
 function DeleteAllProjectData() {
     // constants below later
+    const sessionReady = useSessionGuard();
 
     return (
         <div>

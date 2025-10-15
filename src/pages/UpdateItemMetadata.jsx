@@ -1,7 +1,8 @@
 // import statements here
 
 function UpdateItemMetadata() {
-    // constants to use later
+    // constants to use 
+    const sessionReady = useSessionGuard();
 
     return (
         <div>

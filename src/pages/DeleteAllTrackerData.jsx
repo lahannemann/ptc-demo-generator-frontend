@@ -3,6 +3,7 @@
 
 function DeleteAllTrackerData() {
     // constants to be added later
+    const sessionReady = useSessionGuard();
 
     return (
         <div>

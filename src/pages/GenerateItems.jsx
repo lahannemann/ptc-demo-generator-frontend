@@ -1,7 +1,11 @@
 // import statements later 
 import React, { useState, useEffect } from 'react';
+import useSessionGuard from "../hooks/useSessionGuard";
+
 
 function GenerateItems() {
+    const sessionReady = useSessionGuard();
+
     // create constants to store data 
     const [projectNames, setProjectNames] = useState([]);
     const [responseMessage, setResponseMessage] = useState('');
@@ -16,6 +20,7 @@ function GenerateItems() {
 
     // functions to update inputs
     useEffect(() => {
+        if (!sessionReady) return;
         const fetchProjectNames = async () => {
             try {
             const res = await fetch('http://localhost:8000/api/projects', {
@@ -37,7 +42,7 @@ function GenerateItems() {
         };
 
         fetchProjectNames();
-    }, []);
+    }, [sessionReady]);
 
     const handleProjectSelect = async (e) => {
         const projectName = e.target.value;
