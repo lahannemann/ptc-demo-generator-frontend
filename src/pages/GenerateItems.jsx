@@ -4,9 +4,10 @@ import useSessionGuard from "../hooks/useSessionGuard";
 
 
 function GenerateItems() {
+    // ensures the user is connected to codebeamer to access page
     const sessionReady = useSessionGuard();
 
-    // create constants to store data 
+    
     const [projectNames, setProjectNames] = useState([]);
     const [responseMessage, setResponseMessage] = useState('');
     const [selectedProject, setSelectedProject] = useState('');

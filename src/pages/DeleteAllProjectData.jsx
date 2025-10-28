@@ -1,4 +1,4 @@
-// import statements
+import useSessionGuard from "../hooks/useSessionGuard";
 
 function DeleteAllProjectData() {
     // constants below later
