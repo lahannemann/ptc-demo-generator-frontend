@@ -1,4 +1,5 @@
-// import statements below
+import useSessionGuard from "../hooks/useSessionGuard";
+
 
 function BatchItemGenerator() {
     // constants to be added later

@@ -1,5 +1,6 @@
 // import statements for later
 import React, { useState, useEffect } from 'react';
+import useSessionGuard from "../hooks/useSessionGuard";
 
 function GenerateTraceability() {
     const sessionReady = useSessionGuard();

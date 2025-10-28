@@ -1,4 +1,4 @@
-// import statements here
+import useSessionGuard from "../hooks/useSessionGuard";
 
 function UpdateItemMetadata() {
     // constants to use 

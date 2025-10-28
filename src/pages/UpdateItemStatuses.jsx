@@ -1,4 +1,4 @@
-// import statements later
+import useSessionGuard from "../hooks/useSessionGuard";
 
 function UpdateItemStatuses() {
     // state variables or constants later
