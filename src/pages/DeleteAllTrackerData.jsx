@@ -19,7 +19,7 @@ function DeleteAllTrackerData() {
         if (!sessionReady) return;
         const fetchProjectNames = async () => {
             try {
-                const res = await fetch('http://localhost:8000/api/projects', {
+                const res = await fetch('http://localhost:8000/api/project_names', {
                 method: 'GET',
                 credentials: 'include', // ensures session cookie is sent
                 });
@@ -30,6 +30,7 @@ function DeleteAllTrackerData() {
                 }
 
                 const data = await res.json();
+                console.log(data)
                 setProjectNames(data.project_names || []);        
             } catch (err) {
                 console.error('Error fetching projects:', err);
@@ -92,11 +93,7 @@ function DeleteAllTrackerData() {
             <h1>Delete All Tracker Data</h1>
             <p>! WARNING: This task will delete ALL items in the selected tracker below</p>
             {responseMessage && (
-                <div
-                    style={{
-                    marginTop: '1rem',
-                    }}
-                >
+                <div style={{marginTop: '1rem',}}>
                     {responseMessage}
                 </div>
             )}
@@ -105,9 +102,8 @@ function DeleteAllTrackerData() {
                     <select value={selectedProject} onChange={handleProjectSelect}>
                         <option value="">Select a project</option>
                         {projectNames.map((name, index) => (
-                            <option key={index} value={name}>{name}</option>
+                            <option key={index} value={name} >{name}</option>
                         ))}
-                        {console.log('There are this many projects: ', projectNames.length)}
                     </select>
             </div>
             { trackerOptions.length > 0 && (
