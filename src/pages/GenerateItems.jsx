@@ -19,7 +19,7 @@ function GenerateItems() {
 
 
 
-    // functions to update inputs
+    // fetches project options for user to choose from 
     useEffect(() => {
         if (!sessionReady) return;
         const fetchProjectNames = async () => {
@@ -36,10 +36,6 @@ function GenerateItems() {
 
             const data = await res.json();
             setProjectNames(data.project_names || []);
-            console.log("Here is the data");
-            console.log(data);
-            console.log("here are project names");
-            console.log(data.project_names);
             } catch (err) {
                 console.error('Error fetching projects:', err);
                 setResponseMessage(err.message);
@@ -51,8 +47,6 @@ function GenerateItems() {
 
     const handleProjectSelect = async (e) => {
         const projectName = e.target.value;
-        console.log("Here is selected project name");
-        console.log(e.target.value);
         setSelectedProject(projectName);
 
         try {
@@ -77,9 +71,6 @@ function GenerateItems() {
     };
 
     const handleGenerate = async () => {
-        console.log("Selected tracker id:", selectedTrackerId);
-        console.log("Selected requirement type:", selectedRequirementType);
-        console.log("Item count: ", itemCount);
         try {
             const res = await fetch('http://localhost:8000/api/generate_items', {
                 method: 'POST',
@@ -94,10 +85,6 @@ function GenerateItems() {
             });
 
             const data = await res.json();
-            console.log("data below");
-            console.log(data);
-            console.log("data message below");
-            console.log(data.message);
             setResponseMessage(data.detail || 'Success');
         } catch (err) {
             console.error('Error generating items:', err);

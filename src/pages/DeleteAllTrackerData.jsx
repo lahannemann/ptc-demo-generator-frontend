@@ -30,7 +30,6 @@ function DeleteAllTrackerData() {
                 }
 
                 const data = await res.json();
-                console.log(data)
                 setProjectNames(data.project_names || []);        
             } catch (err) {
                 console.error('Error fetching projects:', err);
