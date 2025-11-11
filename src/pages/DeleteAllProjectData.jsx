@@ -6,7 +6,6 @@ function DeleteAllProjectData() {
     const sessionReady = useSessionGuard();
 
     // constants to be filled with chosen options
-    const [projectNames, setProjectNames] = useState([]);
     const [projects, setProjects] = useState([]);
     const [responseMessage, setResponseMessage] = useState('');
     const [selectedProject, setSelectedProject] = useState('');
@@ -28,11 +27,7 @@ function DeleteAllProjectData() {
                 }
 
                 const data = await res.json();
-                console.log("Here is the data");
-                console.log(data);
                 setProjects(data.projects || []); 
-                console.log("data.projects is: ");
-                console.log(data.projects);
             } catch (err) {
                 console.error('Error fetching projects:', err);
                 setResponseMessage(err.message);
@@ -44,11 +39,8 @@ function DeleteAllProjectData() {
 
     // logic for user selecting project from dropdown
     const handleProjectSelect = async (e) => {
-        console.log(e.target.value);
         const projectName = e.target.value;
-        console.log("Project target val");
-        console.log(e.target.value);
-        setSelectedProject(projectName);
+        setSelectedProjectId(projectName);
     };
 
     // handle logic for submission of delete button
@@ -59,7 +51,7 @@ function DeleteAllProjectData() {
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
                 body: JSON.stringify({
-                    project_id: selectedProject,
+                    project_id: selectedProjectId,
                 })
             });
 
@@ -82,7 +74,7 @@ function DeleteAllProjectData() {
             )}
             <div style={{display: "flex", alignItems:"center", gap: "1rem"}}>
                     <h4>Project</h4>
-                    <select value={selectedProject} onChange={handleProjectSelect}>
+                    <select value={selectedProjectId} onChange={handleProjectSelect}>
                         <option value="">Select a project</option>
                         {projects.map((project) => (
                             <option key={project.id} value={project.id}>{project.name}</option>
