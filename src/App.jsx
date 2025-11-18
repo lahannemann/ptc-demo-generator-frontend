@@ -49,7 +49,7 @@ function App() {
           <img src={cbLogo} className="logo" alt="Codebeamer logo" />
         </a>
       </div>
-      <h1>Codebeamer AI Demo Generator</h1>
+      <h1>Codebeamer Demo Generator</h1>
       <NavBar/>
       <main className="container">
         <Routes>

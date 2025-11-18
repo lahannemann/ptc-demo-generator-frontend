@@ -8,7 +8,6 @@ function DeleteAllProjectData() {
     // constants to be filled with chosen options
     const [projects, setProjects] = useState([]);
     const [responseMessage, setResponseMessage] = useState('');
-    const [selectedProject, setSelectedProject] = useState('');
     const [selectedProjectId, setSelectedProjectId] = useState('');
 
     // retrieves project names
@@ -39,8 +38,8 @@ function DeleteAllProjectData() {
 
     // logic for user selecting project from dropdown
     const handleProjectSelect = async (e) => {
-        const projectName = e.target.value;
-        setSelectedProjectId(projectName);
+        const projectID = e.target.value;
+        setSelectedProjectId(projectID);
     };
 
     // handle logic for submission of delete button
