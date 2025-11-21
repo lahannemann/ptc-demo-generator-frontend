@@ -88,20 +88,20 @@ function UpdateItemMetadata() {
         if (!trackerId) return;
 
         try {
-        const res = await fetch(`http://localhost:8000/api/tracker_items`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            credentials: 'include',
-            body: JSON.stringify({ tracker_id: trackerId }),
-        });
+            const res = await fetch(`http://localhost:8000/api/tracker_items`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ tracker_id: trackerId }),
+            });
 
-        if (!res.ok) {
-            const errorData = await res.json();
-            throw new Error(errorData.detail || 'Failed to fetch items');
-        }
-        
-        const data = await res.json();
-        setSelectedTrackerItems(data.tracker_items || ["empty"]);
+            if (!res.ok) {
+                const errorData = await res.json();
+                throw new Error(errorData.detail || 'Failed to fetch items');
+            }
+            
+            const data = await res.json();
+            setSelectedTrackerItems(data.tracker_items || ["empty"]);
         } catch (err) {
             console.error('Error fetching items:', err);
         }
