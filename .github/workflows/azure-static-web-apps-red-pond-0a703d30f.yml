@@ -16,7 +16,8 @@ jobs:
       contents: read   # token-based deploy doesn't need id-token
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
         with:
           submodules: true
           lfs: false
@@ -26,6 +27,21 @@ jobs:
         with:
           node-version: '20.19.0'
           cache: 'npm'
+
+      - name: Show repo layout & package.json scripts
+        run: |
+          echo "PWD:" && pwd
+          echo "Top-level files:" && ls -la
+          echo "package.json (scripts):"
+          cat package.json | jq '.scripts' || cat package.json
+
+      - name: Check token presence (does not print token)
+        run: |
+          if [ -z "${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_RED_POND_0A703D30F }}" ]; then
+            echo "SWA token secret is missing."; exit 1
+          else
+            echo "SWA token secret is set.";
+          fi
 
       - name: Install dependencies
         run: npm ci
@@ -40,10 +56,10 @@ jobs:
         uses: Azure/static-web-apps-deploy@v1
         with:
           action: "upload"
-          azure_static_web_apps_api_token: "d970e5c9e93371fa201575c09212c5645c9f2b5d3b18633b8dc3c36eef6ae76801-7e3ba09d-bde3-446c-adb2-145eca27a8b000f10210a703d30f"
-          app_location: "/"                # non-empty root
-          app_artifact_location: "dist"    # built output (preferred for v1)
-          skip_app_build: true
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_RED_POND_0A703D30F }}
+          app_location: "/"                # non-empty root; required even when skipping build
+          app_artifact_location: "dist"    # built output (preferred for v1 upload-only)
+          skip_app_build: true             # prevent Oryx/Node18 from rebuilding
           production_branch: "main"
           deployment_environment: "production"
 
@@ -51,6 +67,7 @@ jobs:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
     runs-on: ubuntu-latest
     steps:
-      - uses: Azure/static-web-apps-deploy@v1
+      - name: Close Pull Request preview environment
+        uses: Azure/static-web-apps-deploy@v1
         with:
           action: "close"
