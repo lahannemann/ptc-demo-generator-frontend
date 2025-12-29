@@ -13,7 +13,7 @@ jobs:
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
     runs-on: ubuntu-latest
     permissions:
-      contents: read   # id-token not needed for token-based deploy
+      contents: read   # token-based deploy doesn't need id-token
 
     steps:
       - uses: actions/checkout@v4
@@ -46,19 +46,21 @@ jobs:
         run: npm ci
 
       - name: Build (Vite)
-        run: npm run build    # <-- no extra args
+        run: npm run build
 
       - name: Verify artifacts exist
         run: ls -la dist
 
-      - name: Upload to Azure Static Web Apps (skip build)
+      - name: Upload to Azure Static Web Apps (upload-only)
         uses: Azure/static-web-apps-deploy@v1
         with:
           action: "upload"
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_RED_POND_0A703D30F }}
-          app_location: ""        # upload-only; Oryx disabled
-          output_location: "dist" # Vite default outDir
+          app_location: "/"                # give a non-empty root
+          app_artifact_location: "dist"    # <-- use this for upload-only
           skip_app_build: true
+          production_branch: "main"
+          deployment_environment: "production"
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
