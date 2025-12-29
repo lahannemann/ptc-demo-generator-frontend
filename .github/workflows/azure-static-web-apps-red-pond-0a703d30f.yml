@@ -28,12 +28,6 @@ jobs:
           node-version: '20.19.0'
           cache: 'npm'
 
-      - name: Verify paths (case-sensitive on Linux)
-        run: |
-          ls -la src/pages || true
-          # Adjust this grep to the exact file name you expect:
-          grep -n "from './pages/ConnectionSetup.jsx'" src/App.jsx || true
-
       - name: Install dependencies
         run: npm ci
 
