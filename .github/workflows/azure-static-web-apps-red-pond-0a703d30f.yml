@@ -1,24 +1,23 @@
+
 name: Azure Static Web Apps CI/CD
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
   pull_request:
     types: [opened, synchronize, reopened, closed]
-    branches:
-      - main
+    branches: [main]
 
 jobs:
   build_and_deploy_job:
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
     runs-on: ubuntu-latest
-    name: Build and Deploy Job
     permissions:
-       id-token: write
-       contents: read
+      id-token: write
+      contents: read
+
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           submodules: true
           lfs: false
@@ -27,49 +26,36 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20.19.0'
+          cache: 'npm'
 
-      
-      - name: Show working directory and files
+      - name: Verify paths (case-sensitive on Linux)
         run: |
-          echo "PWD:"
-          pwd
-          echo "Top-level files:"
-          ls -la
-          echo "Contents of src/pages:"
           ls -la src/pages || true
-          echo "Show .oryxrc:"
-          cat .oryxrc || echo "No .oryxrc found at repo root"
-      - name: Install OIDC Client from Core Package
-        run: npm install @actions/core@1.6.0 @actions/http-client
-      - name: Get Id Token
-        uses: actions/github-script@v6
-        id: idtoken
-        with:
-           script: |
-               const coredemo = require('@actions/core')
-               return await coredemo.getIDToken()
-           result-encoding: string
-      - name: Build And Deploy
-        id: builddeploy
+          # Adjust this grep to the exact file name you expect:
+          grep -n "from './pages/ConnectionSetup.jsx'" src/App.jsx || true
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build (Vite)
+        run: npm run build
+
+      - name: Upload to Azure Static Web Apps (skip build)
         uses: Azure/static-web-apps-deploy@v1
         with:
-          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_RED_POND_0A703D30F }}
           action: "upload"
-          ###### Repository/Build Configurations - These values can be configured to match your app requirements. ######
-          # For more information regarding Static Web App workflow configurations, please visit: https://aka.ms/swaworkflowconfig
-          app_location: "/" # App source code path
-          api_location: "" # Api source code path - optional
-          output_location: "build" # Built app content directory - optional
-          github_id_token: ${{ steps.idtoken.outputs.result }}
-          ###### End of Repository/Build Configurations ######
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_RED_POND_0A703D30F }}
+          app_location: "/"
+          output_location: "dist"            # change to "build" only if your Vite config outputs there
+          skip_app_build: true               # <-- prevents Oryx from rebuilding with Node 18
+          # If you prefer OIDC instead of a PAT, you can omit the API token and set these:
+          # azure_static_web_apps_client_id: ${{ secrets.AZURE_STATIC_WEB_APPS_CLIENT_ID }}
+          # repo_token: ${{ secrets.GITHUB_TOKEN }}
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
     runs-on: ubuntu-latest
-    name: Close Pull Request Job
     steps:
-      - name: Close Pull Request
-        id: closepullrequest
-        uses: Azure/static-web-apps-deploy@v1
+      - uses: Azure/static-web-apps-deploy@v1
         with:
           action: "close"

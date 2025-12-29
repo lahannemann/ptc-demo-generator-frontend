@@ -5,7 +5,7 @@ import cbLogo from './assets/codebeamer.svg';
 import './App.css';
 
 // imports all of the page components
-import ConnectionSetup from './pages/connectionSetup.jsx';
+import ConnectionSetup from './pages/ConnectionSetup.jsx';
 import GenerateItems from './pages/GenerateItems.jsx';
 import GenerateTraceability from './pages/GenerateTraceability.jsx';
 import UpdateItemStatuses from './pages/UpdateItemStatuses.jsx';
