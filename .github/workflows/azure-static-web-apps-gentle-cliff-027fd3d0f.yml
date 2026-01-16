@@ -29,6 +29,7 @@ jobs:
           output_location: "dist"      # Vite build output
           api_location: ""             # leave empty unless you have an /api folder
           production_branch: "main"
+          deployment_action: upload
 
 
   close_pull_request_job:
