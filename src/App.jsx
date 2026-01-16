@@ -18,7 +18,7 @@ import BatchItemGenerator from './pages/BatchItemGeneration.jsx';
 
 function App() {
 
-  const [backendError, setBackendError] = useState(false);
+  const [backendError, setBackendError] = React.useState(false);
 
   useEffect(() => {
     const pingBackend = async () => {
