@@ -10,6 +10,7 @@ function DeleteAllProjectData() {
     const [responseMessage, setResponseMessage] = useState('');
     const [selectedProjectId, setSelectedProjectId] = useState('');
 
+    
     // retrieves project names
     useEffect(() => {
         if (!sessionReady) return;
