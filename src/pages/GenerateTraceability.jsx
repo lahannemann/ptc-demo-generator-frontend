@@ -20,13 +20,14 @@ function GenerateTraceability() {
     
     const [trackerItems, setTrackerItems] = useState([]);
     const [selectedTrackerItems, setSelectedTrackerItems] = useState([]);
+    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 
     useEffect(() => {
         if (!sessionReady) return;
         const fetchProjectNames = async () => {
             try {
-            const res = await fetch('http://localhost:8000/api/projects', {
+            const res = await fetch(`${API_BASE_URL}/api/projects`, {
                 method: 'GET',
                 credentials: 'include', // ensures session cookie is sent
             });
@@ -52,7 +53,7 @@ function GenerateTraceability() {
         setSelectedUpstreamProject(projectName);
 
         try {
-            const res = await fetch('http://localhost:8000/api/trackers', {
+            const res = await fetch(`${API_BASE_URL}/api/trackers`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ project_name: projectName }),
@@ -78,7 +79,7 @@ function GenerateTraceability() {
         if (!trackerId) return;
 
         try {
-        const res = await fetch(`http://localhost:8000/api/tracker_items`, {
+        const res = await fetch(`${API_BASE_URL}/api/tracker_items`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             credentials: 'include',
@@ -117,7 +118,7 @@ function GenerateTraceability() {
         setSelectedDownstreamProject(projectName);
 
         try {
-            const res = await fetch('http://localhost:8000/api/trackers', {
+            const res = await fetch(`${API_BASE_URL}/api/trackers`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ project_name: projectName }),
@@ -139,7 +140,7 @@ function GenerateTraceability() {
 
     const handleGenerate = async () => {
         try {
-            const res = await fetch('http://localhost:8000/api/generate_traceability', {
+            const res = await fetch(`${API_BASE_URL}/api/generate_traceability`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',

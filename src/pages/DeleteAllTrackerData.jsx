@@ -12,6 +12,7 @@ function DeleteAllTrackerData() {
 
     const [trackerOptions, setTrackerOptions] = useState([]);
     const [selectedTrackerId, setSelectedTrackerId] = useState('');
+    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 
     // retrieves project names
@@ -19,7 +20,7 @@ function DeleteAllTrackerData() {
         if (!sessionReady) return;
         const fetchProjectNames = async () => {
             try {
-                const res = await fetch('http://localhost:8000/api/project_names', {
+                const res = await fetch(`${API_BASE_URL}/api/project_names`, {
                 method: 'GET',
                 credentials: 'include', // ensures session cookie is sent
                 });
@@ -46,7 +47,7 @@ function DeleteAllTrackerData() {
         setSelectedProject(projectName);
 
         try {
-            const res = await fetch('http://localhost:8000/api/trackers', {
+            const res = await fetch(`${API_BASE_URL}/api/trackers`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ project_name: projectName }),
@@ -70,7 +71,7 @@ function DeleteAllTrackerData() {
     // handle logic for submission of delete button 
     const handleDelete = async () => {
         try {
-            const res = await fetch('http://localhost:8000/api/delete_tracker_data', {
+            const res = await fetch(`${API_BASE_URL}/api/delete_tracker_data`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',

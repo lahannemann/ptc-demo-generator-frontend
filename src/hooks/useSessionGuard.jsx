@@ -3,12 +3,13 @@ import { useNavigate } from "react-router-dom";
 
 function useSessionGuard() {
   const navigate = useNavigate();
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const [sessionReady, setSessionReady] = useState(false);
 
   useEffect(() => {
     async function checkSession() {
       try {
-        const res = await fetch("http://localhost:8000/api/session_check", {
+        const res = await fetch(`${API_BASE_URL}/api/session_check`, {
           credentials: "include",
         });
 

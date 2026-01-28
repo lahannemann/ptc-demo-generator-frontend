@@ -14,12 +14,12 @@ function ConnectionSetup() {
     const [showSuccessPopup, setShowSuccessPopup] = useState(false);
     const [showConnectFailurePopup, setShowConnectFailurePopup] = useState(false);
     const [showProductPopup, setShowProductPopup] = useState(false);
-
+    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 
     const handleConnect = async () => {
         try {
-            const res = await fetch('http://localhost:8000/api/connect', {
+            const res = await fetch(`${API_BASE_URL}/api/connect`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
@@ -53,7 +53,7 @@ function ConnectionSetup() {
 
     const handleSetProduct = async () => {
         try {
-            const res = await fetch('http://localhost:8000/api/set_product', {
+            const res = await fetch(`${API_BASE_URL}/api/set_product`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             credentials: 'include',

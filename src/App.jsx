@@ -17,13 +17,15 @@ import DeleteAllTrackerData from './pages/DeleteAllTrackerData.jsx';
 import BatchItemGenerator from './pages/BatchItemGeneration.jsx';
 
 function App() {
-
+  
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const [backendError, setBackendError] = React.useState(false);
 
   useEffect(() => {
     const pingBackend = async () => {
       try {
-        const res = await fetch('http://localhost:8000/api/greet');
+        console.log('API_BASE_URL =', API_BASE_URL); // should log http://localhost:8000 in dev
+        const res = await fetch(`${API_BASE_URL}/api/greet`);
         if (!res.ok) throw new Error('Server error');
         await res.json(); // you can log this if needed
       } catch (err) {

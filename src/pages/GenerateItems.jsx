@@ -16,7 +16,7 @@ function GenerateItems() {
     const [selectedTrackerId, setSelectedTrackerId] = useState('');
     const [selectedRequirementType, setSelectedRequirementType] = useState('hardware');
     const [itemCount, setItemCount] = useState('');
-
+    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 
     // fetches project options for user to choose from 
@@ -24,7 +24,7 @@ function GenerateItems() {
         if (!sessionReady) return;
         const fetchProjectNames = async () => {
             try {
-            const res = await fetch('http://localhost:8000/api/project_names', {
+            const res = await fetch(`${API_BASE_URL}/api/project_names`, {
                 method: 'GET',
                 credentials: 'include', // ensures session cookie is sent
             });
@@ -50,7 +50,7 @@ function GenerateItems() {
         setSelectedProject(projectName);
 
         try {
-            const res = await fetch('http://localhost:8000/api/trackers', {
+            const res = await fetch(`${API_BASE_URL}/api/trackers`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ project_name: projectName }),
@@ -72,7 +72,7 @@ function GenerateItems() {
 
     const handleGenerate = async () => {
         try {
-            const res = await fetch('http://localhost:8000/api/generate_items', {
+            const res = await fetch(`${API_BASE_URL}/api/generate_items`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',

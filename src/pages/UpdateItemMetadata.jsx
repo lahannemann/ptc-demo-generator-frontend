@@ -19,13 +19,15 @@ function UpdateItemMetadata() {
     const [showSuccessPopup, setShowSuccessPopup] = useState(false);
     const [showFailurePopup, setShowFailurePopup] = useState(false);
 
+    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
     // fetches project options for user to choose from 
     useEffect(() => {
         // only does so if the codebeamer connection is set up 
         if (!sessionReady) return;
         const fetchProjects = async () => {
             try {
-            const res = await fetch('http://localhost:8000/api/project_names', {
+            const res = await fetch(`${API_BASE_URL}/api/project_names`, {
                 method: 'GET',
                 credentials: 'include', // ensures session cookie is sent
             });
@@ -52,7 +54,7 @@ function UpdateItemMetadata() {
         setSelectedProject(projectName);
 
         try {
-            const res = await fetch('http://localhost:8000/api/trackers', {
+            const res = await fetch(`${API_BASE_URL}/api/trackers`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ project_name: projectName }),
@@ -88,7 +90,7 @@ function UpdateItemMetadata() {
         if (!trackerId) return;
 
         try {
-            const res = await fetch(`http://localhost:8000/api/tracker_items`, {
+            const res = await fetch(`${API_BASE_URL}/api/tracker_items`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
@@ -113,7 +115,7 @@ function UpdateItemMetadata() {
 
         const item_ids = selectedTrackerItems.map(item => item.id);
         try {
-            const res = await fetch('http://localhost:8000/api/update_item_metadata', {
+            const res = await fetch(`${API_BASE_URL}/api/update_item_metadata`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json'},
                 credentials: 'include',

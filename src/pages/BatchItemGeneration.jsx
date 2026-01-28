@@ -15,6 +15,7 @@ function BatchItemGenerator() {
     const [selectedTrackerId, setSelectedTrackerId] = useState('');
     const [itemCount, setItemCount] = useState('');
     const [error, setError] = useState('');
+    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 
     // fetches project options for user to choose from 
@@ -23,7 +24,7 @@ function BatchItemGenerator() {
         if (!sessionReady) return;
         const fetchProjectNames = async () => {
             try {
-            const res = await fetch('http://localhost:8000/api/project_names', {
+            const res = await fetch(`${API_BASE_URL}/api/project_names`, {
                 method: 'GET',
                 credentials: 'include', // ensures session cookie is sent
             });
@@ -49,7 +50,7 @@ function BatchItemGenerator() {
         setSelectedProject(projectName);
 
         try {
-            const res = await fetch('http://localhost:8000/api/trackers', {
+            const res = await fetch(`${API_BASE_URL}/api/trackers`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ project_name: projectName }),
@@ -91,7 +92,7 @@ function BatchItemGenerator() {
 
     const handleBatchItemGenerate = async () => {
         try {
-            const res = await fetch('http://localhost:8000/api/generate_batch_items', {
+            const res = await fetch(`${API_BASE_URL}/api/generate_batch_items`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',

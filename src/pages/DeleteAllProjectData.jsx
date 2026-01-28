@@ -9,6 +9,7 @@ function DeleteAllProjectData() {
     const [projects, setProjects] = useState([]);
     const [responseMessage, setResponseMessage] = useState('');
     const [selectedProjectId, setSelectedProjectId] = useState('');
+    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
     
     // retrieves project names
@@ -16,7 +17,7 @@ function DeleteAllProjectData() {
         if (!sessionReady) return;
         const fetchProjects = async () => {
             try {
-                const res = await fetch('http://localhost:8000/api/projects', {
+                const res = await fetch(`${API_BASE_URL}/api/projects`, {
                 method: 'GET',
                 credentials: 'include', // ensures session cookie is sent
                 });
@@ -46,7 +47,7 @@ function DeleteAllProjectData() {
     // handle logic for submission of delete button
     const handleProjectDelete = async () => {
         try {
-            const res = await fetch('http://localhost:8000/api/delete_project_data', {
+            const res = await fetch(`${API_BASE_URL}/api/delete_project_data`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
