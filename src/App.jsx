@@ -39,47 +39,56 @@ function App() {
 
 
 
+
   return (
-    <>
-      <div>
+    <div className="layout">
+      {/* Header: logo + small title, pinned top-left */}
+      <header className="header" role="banner">
+        <a
+          href="https://codebeamer.com"
+          target="_blank"
+          rel="noreferrer"
+          className="brand"
+        >
+          <img src={cbLogo} alt="Codebeamer logo" className="logo" />
+          <span className="title">Codebeamer Demo Generator</span>
+        </a>
+      </header>
+
+      {/* Left sidebar: render the existing NavBar HERE */}
+      <aside className="sidebar" role="navigation" aria-label="Primary">
+        <div className="sidebar-inner">
+          <NavBar />
+        </div>
+      </aside>
+
+
+      {/* Main content area: routed content is centered */}
+      <main className="main" role="main">
         {backendError && (
-          <div style={{ color: 'red', padding: '1rem' }}>
+          <div className="banner banner--error" role="alert" aria-live="polite">
             ⚠️ Server is unavailable. Please try again later.
           </div>
         )}
-        <a href="https://www.ptc.com/en/products/codebeamer" target="_blank">
-          <img src={cbLogo} className="logo" alt="Codebeamer logo" />
-        </a>
-      </div>
-      <h1>Codebeamer Demo Generator</h1>
-      <NavBar/>
-      <main className="container">
-        <Routes>
-          <Route path="/" element={<ConnectionSetup/>} />
-          <Route path="/GenerateItems" element={<GenerateItems/>}/>
-          <Route path="/GenerateTraceability" element={<GenerateTraceability/>} />
-          <Route path="/UpdateItemStatuses" element={<UpdateItemStatuses/>}/>
-          <Route path="/UpdateItemMetadata" element={<UpdateItemMetadata/>}/>
-          <Route path="/TestRunGenerator" element={<TestRunGenerator/>}/>
-          <Route path="/GenerateTestSteps" element={<GenerateTestSteps/>}/>
-          <Route path="/DeleteAllProjectData" element={<DeleteAllProjectData/>}/>
-          <Route path="/DeleteAllTrackerData" element={<DeleteAllTrackerData/>}/>
-          <Route path="/BatchItemGenerator" element={<BatchItemGenerator/>}/>
-        </Routes>
+
+        <div className="content">
+          <Routes>
+            <Route path="/" element={<ConnectionSetup />} />
+            <Route path="/GenerateItems" element={<GenerateItems />} />
+            <Route path="/GenerateTraceability" element={<GenerateTraceability />} />
+            <Route path="/UpdateItemStatuses" element={<UpdateItemStatuses />} />
+            <Route path="/UpdateItemMetadata" element={<UpdateItemMetadata />} />
+            <Route path="/TestRunGenerator" element={<TestRunGenerator />} />
+            <Route path="/GenerateTestSteps" element={<GenerateTestSteps />} />
+            <Route path="/DeleteAllProjectData" element={<DeleteAllProjectData />} />
+            <Route path="/DeleteAllTrackerData" element={<DeleteAllTrackerData />} />
+            <Route path="/BatchItemGenerator" element={<BatchItemGenerator />} />
+          </Routes>
+        </div>
       </main>
-      {/* <div>
-        <ConnectionSetup></ConnectionSetup>
-        <GenerateTraceability></GenerateTraceability>
-        <UpdateItemStatuses></UpdateItemStatuses>
-        <UpdateItemMetadata></UpdateItemMetadata>
-        <TestRunGenerator></TestRunGenerator>
-        <GenerateTestSteps></GenerateTestSteps>
-        <DeleteAllProjectData></DeleteAllProjectData>
-        <DeleteAllTrackerData></DeleteAllTrackerData>
-        <BatchItemGenerator></BatchItemGenerator>
-      </div> */}
-    </>
-  )
+    </div>
+  );
+
 }
 
 export default App

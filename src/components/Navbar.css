@@ -1,114 +1,30 @@
-/* src/components/Navbar.css */
-/* ---------- Theme tokens ---------- */
-:root {
-  --nav-height: 64px;
-  --max-width: 1200px;
 
-  --bg: #ffffff;
-  --text: #111827;          /* slate-900 */
-  --text-muted: #6b7280;    /* slate-500 */
-  --accent: #2563eb;        /* blue-600 */
-  --border: #e5e7eb;        /* gray-200 */
-  --hover: #f3f4f6;         /* gray-100 */
-  --focus: #93c5fd;         /* blue-300 (outline) */
+.nav-vertical ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
-
-/* ---------- Container / Bar ---------- */
-.nav {
-  position: sticky;    /* stick to top; remove if you want it static */
-  top: 0;
-  z-index: 50;
-  background: var(--bg);
-  border-bottom: 1px solid var(--border);
+.nav-vertical li {
+  margin: 2px 0;
 }
-
-.nav_bar {
-  height: var(--nav-height);
-  max-width: var(--max-width);
-  margin: 0 auto;
-  padding: 0 16px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-/* Optional brand style in case you add one */
-.nav_brand {
-  font-weight: 700;
-  color: var(--text);
+.nav-vertical a {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 10px 12px;
   text-decoration: none;
-  letter-spacing: 0.2px;
-}
-
-/* ---------- Desktop Links ---------- */
-/* Hidden on small screens (desktop-only) */
-.nav_links.desktop {
-  display: none;
-}
-
-/* Show & layout horizontally on desktop */
-@media (min-width: 768px) {
-  .nav_links.desktop {
-    display: flex;
-    gap: 16px;
-    align-items: center;
-  }
-}
-
-/* ---------- Link styles ---------- */
-.link {
-  text-decoration: none;
-  color: var(--text);
-  padding: 8px 10px;
+  color: var(--text, #1f2937);
+  border-left: 3px solid transparent;
   border-radius: 6px;
-  font-weight: 500;
-  transition: background 160ms ease, color 160ms ease, box-shadow 160ms ease;
+  font-size: 14px;
 }
-
-.link:hover {
-  background: var(--hover);
+.nav-vertical a:hover {
+  background: var(--brand-ghost, #e6f2eb);
 }
-
-/* Active route via NavLink */
-.link.active {
-  color: var(--accent);
+.nav-vertical a.active,
+.nav-vertical [aria-current="page"] {
+  color: var(--brand, #1f7a45);
+  background: var(--brand-ghost, #e6f2eb);
+  border-left-color: var(--brand, #1f7a45);
   font-weight: 600;
-}
-
-/* Keyboard focus */
-.link:focus-visible {
-  outline: 2px solid var(--focus);
-  outline-offset: 2px;
-  box-shadow: 0 0 0 2px var(--focus);
-}
-
-/* ---------- Optional: subtle underline on active link ---------- */
-/* Uncomment if you prefer a bottom border indicator instead of color change */
-/*
-.link.active {
-  position: relative;
-  color: var(--text);
-}
-.link.active::after {
-  content: '';
-  position: absolute;
-  left: 8px;
-  right: 8px;
-  bottom: 4px;
-  height: 2px;
-  background: var(--accent);
-  border-radius: 2px;
-}
-*/
-
-/* ---------- Optional dark mode ---------- */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #0b0f19;
-    --text: #e5e7eb;
-    --text-muted: #9ca3af;
-    --border: #111827;
-    --hover: #111827;
-    --focus: #60a5fa;
-  }
 }

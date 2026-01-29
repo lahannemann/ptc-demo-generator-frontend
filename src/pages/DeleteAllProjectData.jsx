@@ -1,88 +1,72 @@
 import React, { useState, useEffect } from 'react';
 import useSessionGuard from "../hooks/useSessionGuard";
+import getProjects from '../hooks/getProjects';
+
+import useAsyncPopupAction from '../hooks/useAsyncPopupAction';
+import AsyncActionButton from '../components/AsyncActionButton';
 
 function DeleteAllProjectData() {
     // ensures the user is connected to codebeamer to access this page
     const sessionReady = useSessionGuard();
 
-    // constants to be filled with chosen options
-    const [projects, setProjects] = useState([]);
-    const [responseMessage, setResponseMessage] = useState('');
-    const [selectedProjectId, setSelectedProjectId] = useState('');
+    const { projectNames, error: projectsError } = getProjects(sessionReady);
+    const [selectedProject, setSelectedProject] = useState('');
     const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-    
-    // retrieves project names
-    useEffect(() => {
-        if (!sessionReady) return;
-        const fetchProjects = async () => {
-            try {
-                const res = await fetch(`${API_BASE_URL}/api/projects`, {
-                method: 'GET',
-                credentials: 'include', // ensures session cookie is sent
-                });
+    // unified async action state (replaces local isGenerating/show*Popup/responseMessage)
+    const {
+        isRunning,
+        run,
+        responseMessage,
+        showSuccessPopup, setShowSuccessPopup,
+        showFailurePopup, setShowFailurePopup,
+    } = useAsyncPopupAction();
 
-                if (!res.ok) {
-                    const errorData = await res.json();
-                    throw new Error(errorData.detail || 'Failed to fetch projects');
-                }
+    const deleteItems = async () => {
+        const res = await fetch(`${API_BASE_URL}/api/delete_project_data`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({
+                project_name: selectedProject,
+            }),
+        });
 
-                const data = await res.json();
-                setProjects(data.projects || []); 
-            } catch (err) {
-                console.error('Error fetching projects:', err);
-                setResponseMessage(err.message);
-            }
-        };
-
-        fetchProjects();
-    }, [sessionReady]);
-
-    // logic for user selecting project from dropdown
-    const handleProjectSelect = async (e) => {
-        const projectID = e.target.value;
-        setSelectedProjectId(projectID);
+        const data = await res.json();
+        if (!res.ok) throw new Error(data?.detail || 'Failed to delete project data');
+        return data?.detail || 'Project data was deleted successfully.';
     };
-
-    // handle logic for submission of delete button
-    const handleProjectDelete = async () => {
-        try {
-            const res = await fetch(`${API_BASE_URL}/api/delete_project_data`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                credentials: 'include',
-                body: JSON.stringify({
-                    project_id: selectedProjectId,
-                })
-            });
-
-            const data = await res.json();
-            setResponseMessage(data.message);
-        } catch (err) {
-            console.error('Error deleting project:', err);
-            setResponseMessage('Failed to delete project data');
-        }
-    }
 
     return (
         <div>
             <h1>Delete All Project Data</h1>
             <p>! WARNING: This task will delete ALL data in your project</p>
-            {responseMessage && (
-                <div style={{marginTop: '1rem',}}>
-                    {responseMessage}
-                </div>
-            )}
-            <div style={{display: "flex", alignItems:"center", gap: "1rem"}}>
-                    <h4>Project</h4>
-                    <select value={selectedProjectId} onChange={handleProjectSelect}>
-                        <option value="">Select a project</option>
-                        {projects.map((project) => (
-                            <option key={project.id} value={project.id}>{project.name}</option>
-                        ))}
-                    </select>
+            <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+                <h4>Project</h4>
+                <select
+                    value={selectedProject}
+                    onChange={(e) => setSelectedProject(e.target.value)}
+                    disabled={!sessionReady}
+                >
+                    <option value="">Select a project</option>
+                    {projectNames.map((name, index) => (
+                        <option key={index} value={name}>{name}</option>
+                    ))}
+                </select>
             </div>
-            <button onClick={handleProjectDelete}>Delete All Project Data</button>
+            <div>
+                <AsyncActionButton
+                    isRunning={isRunning}
+                    onRun={() => run(deleteItems)}
+                    label="Delete"
+                    busyLabel="Deleting..."
+                    successOpen={showSuccessPopup}
+                    onSuccessClose={() => setShowSuccessPopup(false)}
+                    failureOpen={showFailurePopup}
+                    onFailureClose={() => setShowFailurePopup(false)}
+                    message={responseMessage}
+                />
+            </div>
         </div>
     )
 }

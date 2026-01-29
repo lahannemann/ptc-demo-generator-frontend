@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
+import { useLocation } from "react-router-dom";
 
 
 function ConnectionSetup() {
@@ -16,6 +17,36 @@ function ConnectionSetup() {
     const [showProductPopup, setShowProductPopup] = useState(false);
     const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
+    const location = useLocation();
+
+    useEffect(() => {
+        if (location.state?.needConnection) {
+            setShowConnectFailurePopup(true);   // reuse your popup
+        }
+    }, [location.state]);
+
+    useEffect(() => {
+        const checkSession = async () => {
+            try {
+                const res = await fetch(`${API_BASE_URL}/api/session_check`, {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                });
+
+                if (!res.ok) return; // not connected
+
+                const data = await res.json();
+                setIsConnected(true);
+                setUrl(data.url || "");
+            } catch (err) {
+                // not connected -- do nothing
+            }
+        };
+
+        checkSession();
+    }, []);
+
 
     const handleConnect = async () => {
         try {
@@ -25,7 +56,7 @@ function ConnectionSetup() {
                 credentials: 'include',
                 body: JSON.stringify({ url, username, password }),
             });
-                
+
             if (!res.ok) {
                 const errorData = await res.json();
                 throw new Error(errorData.detail || 'Connection failed');
@@ -37,32 +68,50 @@ function ConnectionSetup() {
             setShowSuccessPopup(true); // Show popup on success
         } catch (err) {
             console.error('Error connecting:', err);
-            setIsConnected(false); 
+            setIsConnected(false);
             setResponseMessage(err.message);
             setShowConnectFailurePopup(true); // show popup notifying connection failure        
         }
     };
-    
-    const handleDisconnect = () => {
-        setIsConnected(false);
-        setResponseMessage('Disconnected.');
-        setUrl('');
-        setUsername('');
-        setPassword('');
+
+
+    const handleDisconnect = async () => {
+        try {
+            const res = await fetch(`${API_BASE_URL}/api/disconnect`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ url, username, password }),
+            });
+
+            if (!res.ok) {
+                const errorData = await res.json();
+                throw new Error(errorData.detail || 'Connection failed');
+            }
+
+            const data = await res.json();
+            setIsConnected(false);
+            setResponseMessage('Disconnected.');
+            setUrl('');
+            setUsername('');
+            setPassword('');
+        } catch (err) {
+            console.error('Error connecting:', err);
+        }
     };
 
     const handleSetProduct = async () => {
         try {
             const res = await fetch(`${API_BASE_URL}/api/set_product`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            credentials: 'include',
-            body: JSON.stringify({ product_name: productName }),
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ product_name: productName }),
             });
 
             if (!res.ok) {
-            const errorData = await res.json();
-            throw new Error(errorData.detail || 'Failed to set product');
+                const errorData = await res.json();
+                throw new Error(errorData.detail || 'Failed to set product');
             }
 
             const data = await res.json();
@@ -77,72 +126,69 @@ function ConnectionSetup() {
         <div>
             <h1>Codebeamer Connection Setup</h1>
             <p>
-                SECURITY NOTICE:  Please DO NOT use customer servers, usernames, 
+                SECURITY NOTICE:  Please DO NOT use customer servers, usernames,
                 passwords, or any sensitive information when using this software.
-                 This tool is designed for generating and loading demo data into 
-                 cloud portals and other servers. For security reasons, always use 
-                 test accounts and non-sensitive information.
+                This tool is designed for generating and loading demo data into
+                cloud portals and other servers. For security reasons, always use
+                test accounts and non-sensitive information.
             </p>
             <h2>Connect to Codebeamer</h2>
-            {responseMessage && (
-                <div
-                    style={{
-                    marginTop: '1rem',
-                    }}
-                >
-                    {responseMessage}
+            {isConnected ? (
+                <div style={{ marginBottom: '1rem', padding: '0.5rem', background: '#e8f5e9' }}>
+                    <strong>Connected to:</strong> {url}
                 </div>
+            ) : (
+                <>
+                    <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+                        <h4>URL</h4>
+                        <input
+                            type="text"
+                            placeholder='Paste URL'
+                            value={url}
+                            onChange={(e) => setUrl(e.target.value)}
+                        />
+                    </div>
+
+                    <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+                        <h4>Username</h4>
+                        <input
+                            type="text"
+                            placeholder="Enter username"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                        />
+                    </div>
+
+                    <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+                        <h4>Password</h4>
+                        <input
+                            type="password"
+                            placeholder="Enter password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter') handleConnect();
+                            }}
+                        />
+                    </div>
+                </>
             )}
-            <div >
-                <div style={{display: "flex", alignItems:"center", gap: "1rem"}}>
-                    <h4>URL</h4>
-                    <input 
-                        type="text" 
-                        placeholder='Paste URL' 
-                        value={url} 
-                        onChange={(e) => setUrl(e.target.value)} 
-                    />
-                </div>
-                <div style={{display: "flex", alignItems:"center", gap: "1rem"}}>
-                    <h4>Username</h4>
-                    <input 
-                        type="text"
-                        placeholder="Enter username"
-                        value={username} 
-                        onChange={(e) => setUsername(e.target.value)} 
-                    />
-                </div>
-                <div style={{display: "flex", alignItems:"center", gap: "1rem"}}>
-                    <h4>Password</h4>
-                    <input 
-                        type="password"
-                        placeholder="Enter password"
-                        value={password} 
-                        onChange={(e) => setPassword(e.target.value)} 
-                        onKeyDown={(e) => {
-                            if (e.key === 'Enter') {
-                                handleConnect();
-                            }
-                        }}
-                    />
-                </div>
-            </div>
-            
+
             <button onClick={handleConnect}>
                 {isConnected ? 'Connected ✅' : 'Connect'}
             </button>
 
-        
+
             {isConnected && (
                 <button onClick={handleDisconnect} style={{ marginTop: '1rem' }}>
                     Disconnect
                 </button>
             )}
 
-            
+
             {isConnected && (
                 <>
-                    <h2>Select Product</h2>
+                    <h2 style={{ paddingTop: "2rem" }}>Select Product</h2>
                     <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
                         <h4>Product</h4>
                         <input
@@ -182,6 +228,14 @@ function ConnectionSetup() {
                     <h3>✅ Product Set Successfully!</h3>
                     <p>The product <strong>{productName}</strong> has been configured.</p>
                     <button onClick={() => setShowProductPopup(false)}>Close</button>
+                </div>
+            </Popup>
+
+            <Popup open={showConnectFailurePopup} onClose={() => setShowConnectFailurePopup(false)} modal>
+                <div style={{ padding: '1rem' }}>
+                    <h3>⚠️ Please connect first</h3>
+                    <p>You must connect to a Codebeamer server before using this feature.</p>
+                    <button onClick={() => setShowConnectFailurePopup(false)}>Close</button>
                 </div>
             </Popup>
 

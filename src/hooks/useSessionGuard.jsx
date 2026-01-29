@@ -10,22 +10,35 @@ function useSessionGuard() {
     async function checkSession() {
       try {
         const res = await fetch(`${API_BASE_URL}/api/session_check`, {
-          credentials: "include",
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
         });
 
+
         if (!res.ok) {
-          navigate("/");
+          navigate("/", {
+            replace: true,
+            state: { needConnection: true }   // ⭐ pass message trigger
+          });
           return;
         }
+
 
         const data = await res.json();
         if (data.status === "connected") {
           setSessionReady(true);
         } else {
-          navigate("/");
+          navigate("/", {
+            replace: true,
+            state: { needConnection: true }   // ⭐ pass message trigger
+          });
         }
       } catch (err) {
-        navigate("/");
+        navigate("/", {
+            replace: true,
+            state: { needConnection: true }   // ⭐ pass message trigger
+          });
       }
     }
 

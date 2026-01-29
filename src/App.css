@@ -1,42 +1,316 @@
-#root {
-  max-width: 1280px;
+/* --- Design tokens --- */
+:root{
+  --header-h: 56px;
+  --sidebar-w: 260px;
+  --bg: #f7f8fa;
+  --surface: #ffffff;
+  --text: #1f2937;
+  --muted: #6b7280;
+  --brand: #1f7a45;        /* Codebeamer-ish green */
+  --brand-ghost: #e6f2eb;
+  --border: #e5e7eb;
+}
+
+* { box-sizing: border-box; }
+html, body, #root { height: 100%; }
+body {
+  margin: 0;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans";
+  color: var(--text);
+  background: var(--bg);
+}
+
+/* --- Grid layout: header + left sidebar + main --- */
+.layout{
+  height: 100vh;
+  display: grid;
+  grid-template-rows: var(--header-h) 1fr;
+  grid-template-columns: var(--sidebar-w) 1fr;
+  grid-template-areas:
+    "header header"
+    "sidebar main";
+}
+
+/* --- Header (small, top-left) --- */
+.header{
+  grid-area: header;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+}
+.brand{
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: inherit;
+  text-decoration: none;
+}
+.logo{
+  height: 28px; width: auto; display: block;
+}
+.title{
+  font-size: 16px; font-weight: 600; letter-spacing: .2px;
+}
+
+/* --- Sidebar --- */
+.sidebar{
+  grid-area: sidebar;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  padding: 12px 0;
+  overflow: auto;
+}
+
+/* Scope all fixes inside .sidebar-inner so we don't break a topbar version elsewhere */
+.sidebar-inner{
+  /* If NavBar returns a flex row, force column */
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 0 8px;
+}
+
+/* Common patterns NavBar likely emits: ul/li/a or div>a buttons */
+.sidebar-inner ul{
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.sidebar-inner li{ margin: 2px 0; }
+
+/* Anchor-like items vertically stacked */
+.sidebar-inner a,
+.sidebar-inner button{
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 10px 12px;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  text-decoration: none;
+  border-left: 3px solid transparent;
+  border-radius: 6px;            /* rounds hover background edges */
+  font-size: 14px;
+  cursor: pointer;
+}
+
+/* Hover/focus */
+.sidebar-inner a:hover,
+.sidebar-inner button:hover{
+  background: var(--brand-ghost);
+}
+.sidebar-inner a:focus-visible,
+.sidebar-inner button:focus-visible{
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+
+/* Active state (works if NavBar uses NavLink with .active or ARIA current) */
+.sidebar-inner a.active,
+.sidebar-inner [aria-current="page"]{
+  color: var(--brand);
+  background: var(--brand-ghost);
+  border-left-color: var(--brand);
+  font-weight: 600;
+}
+
+/* --- Main content area --- */
+.main{
+  grid-area: main;
+  min-width: 0;
+  padding: 20px 24px;
+  overflow: auto;
+}
+
+/* Alert banner */
+.banner{
+  margin: 0 0 16px;
+  padding: 12px 14px;
+  border-radius: 8px;
+  background: #fffbe6;
+  border: 1px solid #ffe58f;
+  color: #8a6d3b;
+}
+.banner--error{
+  background: #fff2f0;
+  border-color: #ffccc7;
+  color: #a8071a;
+}
+
+/* Center the routed page content like your "previous layout" screenshot */
+.content{
+  max-width: none;
   margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+/* Typographic rhythm */
+h1,h2,h3{ margin: 0 0 12px; font-weight: 700; }
+h1{ font-size: 28px; }
+h2{ font-size: 22px; }
+p,label,input,button{ font-size: 14px; }
+
+/* Optional card style for forms */
+.card{
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
+/* Modern input fields */
+input[type="text"],
+input[type="password"],
+input[type="url"],
+input[type="email"] {
+  width: 100%;
+  max-width: 450px;
+  padding: 10px 12px;
+
+  background: #ffffff;
+  border: 1px solid #d1d5db; /* soft neutral border */
+  border-radius: 8px;        /* smooth modern look */
+
+  font-size: 14px;
+  color: #1f2937;
+
+  transition: 
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+}
+
+/* Hover */
+input:hover {
+  border-color: #9ca3af;
+}
+
+/* --- Modern form layout --- */
+
+/* Form labels: softer, cleaner */
+form label,
+.label {
+  font-weight: 100; /* softer than bold */
+  font-size: 14px;
+  color: #374151; /* neutral gray, not harsh black */
+  margin-bottom: 4px;
+  display: block;
+}
+
+/* Stack label + input neatly */
+form .form-field {
+  margin-bottom: 18px; /* consistent vertical rhythm */
+}
+
+/* If your layout is just <label><input> without wrappers */
+label + input {
+  margin-top: 4px;
+  margin-bottom: 18px;
+}
+
+/* The “Connect” link/button */
+button,
+input[type="submit"],
+.connect-btn,
+.form-submit {
+  padding: 10px 14px;
+  border: none;
+  color: green;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 16px;
+
+  transition: background 0.15s ease;
+}
+
+button:disabled {
+  opacity: 0.6; 
+  cursor: not-allowed;
+}
+
+button:hover,
+input[type="submit"]:hover,
+.connect-btn:hover {
+  color: #166a3a;
+}
+
+/* Modern dropdowns - same look as inputs */
+select {
+  width: 100%;
+  max-width: 320px;
+  padding: 10px 12px;
+
+  background: #ffffff;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+
+  font-size: 14px;
+  color: #1f2937;
+
+  appearance: none;          /* remove OS dropdown styling */
+  background-image: url("data:image/svg+xml;utf8,<svg fill='gray' height='16' width='16' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'><polygon points='5,7 15,7 10,12' /></svg>");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 14px;
+
+  cursor: pointer;
+
+  transition: 
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    background-color 0.15s ease;
+}
+
+/* Hover */
+select:hover {
+  border-color: #9ca3af;
+}
+
+/* Focus */
+select:focus {
+  outline: none;
+  border-color: var(--brand, #1f7a45);
+  box-shadow: 0 0 0 3px rgba(31, 122, 69, 0.25);
+}
+
+/* Disabled state (optional) */
+select:disabled {
+  background-color: #f3f4f6;
+  color: #9ca3af;
+  cursor: not-allowed;
+}
+
+
+/* Focus (when user clicks/typing) */
+input:focus {
+  outline: none;
+  border-color: var(--brand, #1f7a45);
+  box-shadow: 0 0 0 3px rgba(31, 122, 69, 0.25); /* green glow */
+  background: #ffffff;
+}
+
+/* Placeholder style */
+input::placeholder {
+  color: #9ca3af;
+}
+
+.content-page {
+  width: 100%;
+  padding-top: 1rem;
+}
+
+/* Responsive: sidebar collapses above content */
+@media (max-width: none){
+  .layout{
+    grid-template-rows: var(--header-h) auto 1fr;
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "header"
+      "sidebar"
+      "main";
   }
-  to {
-    transform: rotate(360deg);
-  }
+  .sidebar{ border-right: none; border-bottom: 1px solid var(--border); }
+  
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
-}
