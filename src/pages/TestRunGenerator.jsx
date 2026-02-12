@@ -131,7 +131,7 @@ function TestRunGenerator() {
                 Passed, Failed, or Blocked.
             </p>
             <div>
-                <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+                <div className='form-row'>
                     <h4>Project</h4>
                     <select value={selectedProject} onChange={(e) => setSelectedProject(e.target.value)}>
                         <option value="">Select a project</option>
@@ -142,7 +142,7 @@ function TestRunGenerator() {
                 </div>
                 {trackerOptions.length > 0 && (
                     <div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginTop: '1rem' }}>
+                        <div className='form-row'>
                             <h4>Tracker</h4>
                             <select value={selectedTrackerId} onChange={(e) => {
                                 const trackerId = e.target.value;
@@ -229,7 +229,7 @@ function TestRunGenerator() {
                             );
                         })}
 
-                        <div style={{ marginTop: "0.5rem", fontSize: "0.9rem" }}>
+                        <div style={{ marginTop: "0.5rem", fontSize: "0.9rem", marginBottom: "1rem" }}>
                             Total: {resultDist.passed + resultDist.failed + resultDist.blocked} / {totalSelected}
                         </div>
                     </div>

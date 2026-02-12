@@ -72,7 +72,7 @@ function UpdateItemStatuses() {
                 tracker or only those you select.
             </p>
             <div>
-                <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+                <div className='form-row'>
                     <h4>Project</h4>
                     <select value={selectedProject} onChange={(e) => setSelectedProject(e.target.value)}>
                         <option value="">Select a project</option>
@@ -83,7 +83,7 @@ function UpdateItemStatuses() {
                 </div>
                 {trackerOptions.length > 0 && (
                     <div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginTop: '1rem' }}>
+                        <div className='form-row'>
                             <h4>Tracker</h4>
                             <select value={selectedTrackerId} onChange={(e) => {
                                 const trackerId = e.target.value;
@@ -101,7 +101,7 @@ function UpdateItemStatuses() {
                 )}
                 {/* Tracker Items Selection */}
                 {trackerItems.length > 0 && (
-                    <div style={{ marginTop: '1rem' }}>
+                    <div className="form-row form-row--multiselect">
                         <h4>Select Tracker Items</h4>
                         <select multiple style={{ width: '500px', height: '250px' }}>
                             <option onClick={handleSelectAll}>
@@ -111,6 +111,10 @@ function UpdateItemStatuses() {
                                 <option
                                     key={item.id}
                                     onClick={() => handleItemToggle(item.id)}
+                                    onMouseDown={(e) => {
+                                        // Prevent native select behavior (which requires Ctrl/⌘)
+                                        e.preventDefault();
+                                    }}
                                     style={{
                                         backgroundColor: selectedTrackerItems.includes(item.id) ? '#5bb73b' : 'white',
                                         color: selectedTrackerItems.includes(item.id) ? 'white' : 'black'

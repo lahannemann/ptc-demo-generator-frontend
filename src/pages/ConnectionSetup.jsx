@@ -139,7 +139,7 @@ function ConnectionSetup() {
                 </div>
             ) : (
                 <>
-                    <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+                    <div className='form-row'>
                         <h4>URL</h4>
                         <input
                             type="text"
@@ -149,7 +149,7 @@ function ConnectionSetup() {
                         />
                     </div>
 
-                    <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+                    <div className='form-row'>
                         <h4>Username</h4>
                         <input
                             type="text"
@@ -159,7 +159,7 @@ function ConnectionSetup() {
                         />
                     </div>
 
-                    <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+                    <div className='form-row'>
                         <h4>Password</h4>
                         <input
                             type="password"
@@ -189,7 +189,7 @@ function ConnectionSetup() {
             {isConnected && (
                 <>
                     <h2 style={{ paddingTop: "2rem" }}>Select Product</h2>
-                    <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+                    <div className='form-row'>
                         <h4>Product</h4>
                         <input
                             type="text"

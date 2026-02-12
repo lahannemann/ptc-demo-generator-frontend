@@ -72,7 +72,7 @@ function GenerateItems() {
                 </div>
             )}
             <div>
-                <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+                <div className='form-row'>
                     <h4>Requirement Type</h4>
                     <select value={selectedRequirementType} onChange={(e) => setSelectedRequirementType(e.target.value)}>
                         <option value="hardware">Hardware</option>
@@ -80,7 +80,7 @@ function GenerateItems() {
                         <option value="both">Hardware & Software</option>
                     </select>
                 </div>
-                <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+                <div className='form-row'>
                     <h4>Project</h4>
                     <select
                         value={selectedProject}
@@ -95,7 +95,7 @@ function GenerateItems() {
                 </div>
                 {trackerOptions.length > 0 && (
                     <div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginTop: '1rem' }}>
+                        <div className='form-row'>
                             <h4>Tracker</h4>
                             <select value={selectedTrackerId} onChange={(e) => setSelectedTrackerId(e.target.value)}>
                                 <option value="">Select a tracker</option>
@@ -106,7 +106,7 @@ function GenerateItems() {
                                 ))}
                             </select>
                         </div>
-                        <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+                        <div className='form-row'>
                             <h4>Item Count</h4>
                             <input
                                 type="text"

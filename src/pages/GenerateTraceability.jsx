@@ -88,7 +88,7 @@ function GenerateTraceability() {
                 downstream items and links them to their corresponding upstream items in Codebeamer.
             </p>
             <div>
-                <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+                <div className='form-row'>
                     <h4>Upstream Project</h4>
                     <select value={selectedUpstreamProject} onChange={(e) => setSelectedUpstreamProject(e.target.value)}>
                         <option value="">Select upstream project</option>
@@ -99,7 +99,7 @@ function GenerateTraceability() {
                 </div>
                 {upstreamTrackerOptions.length > 0 && (
                     <div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginTop: '1rem' }}>
+                        <div className='form-row'>
                             <h4>Upstream Tracker</h4>
                             <select value={upstreamSelectedTrackerId}
                                 onChange={(e) => {
@@ -119,16 +119,28 @@ function GenerateTraceability() {
 
                 {/* Upstream Items Selection */}
                 {upstreamTrackerItems.length > 0 && (
-                    <div style={{ marginTop: '1rem' }}>
+                    <div className="form-row form-row--multiselect">
                         <h4>Select Upstream Items</h4>
-                        <select multiple style={{ width: '250px', height: '150px' }}>
-                            <option onClick={handleSelectAll}>
+
+                        <select multiple className="multiselect">
+                            <option
+                                onClick={handleSelectAll}
+                                onMouseDown={(e) => {
+                                    // Prevent native select behavior (which requires Ctrl/⌘)
+                                    e.preventDefault();
+                                }}
+                            >
                                 {selectedTrackerItems.length === upstreamTrackerItems.length ? 'Deselect All' : 'Select All'}
                             </option>
+
                             {upstreamTrackerItems.map(item => (
                                 <option
                                     key={item.id}
                                     onClick={() => handleItemToggle(item.id)}
+                                    onMouseDown={(e) => {
+                                        // Prevent native select behavior (which requires Ctrl/⌘)
+                                        e.preventDefault();
+                                    }}
                                     style={{
                                         backgroundColor: selectedTrackerItems.includes(item.id) ? '#5bb73b' : 'white',
                                         color: selectedTrackerItems.includes(item.id) ? 'white' : 'black'
@@ -141,8 +153,7 @@ function GenerateTraceability() {
                     </div>
                 )}
 
-
-                <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+                <div className='form-row'>
                     <h4>Downstream Project</h4>
                     <select value={selectedDownstreamProject} onChange={(e) => setSelectedDownstreamProject(e.target.value)}>
                         <option value="">Select downstream project</option>
@@ -153,7 +164,7 @@ function GenerateTraceability() {
                 </div>
                 {downstreamTrackerOptions.length > 0 && (
                     <div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginTop: '1rem' }}>
+                        <div className='form-row'>
                             <h4>Downstream Tracker</h4>
                             <select value={downstreamSelectedTrackerId} onChange={(e) => setDownstreamSelectedTrackerId(e.target.value)}>
                                 <option value="">Select downstream tracker</option>
@@ -164,7 +175,7 @@ function GenerateTraceability() {
                                 ))}
                             </select>
                         </div>
-                        <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+                        <div className='form-row'>
                             <h4>Downstream Items per Upstream</h4>
                             <input
                                 type="text"

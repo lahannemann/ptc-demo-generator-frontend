@@ -73,7 +73,7 @@ function GenerateTestSteps() {
                 as this process is resource-intensive and exceeding the limit may impact system performance.
             </p>
             <div>
-                <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+                <div className='form-row'>
                     <h4>Project</h4>
                     <select value={selectedProject} onChange={(e) => setSelectedProject(e.target.value)}>
                         <option value="">Select a project</option>
@@ -84,7 +84,7 @@ function GenerateTestSteps() {
                 </div>
                 {trackerOptions.length > 0 && (
                     <div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginTop: '1rem' }}>
+                        <div className='form-row'>
                             <h4>Tracker</h4>
                             <select value={selectedTrackerId} onChange={(e) => {
                                 const trackerId = e.target.value;
@@ -102,7 +102,7 @@ function GenerateTestSteps() {
                 )}
                 {/* Tracker Items Selection */}
                 {trackerItems.length > 0 && (
-                    <div style={{ marginTop: '1rem' }}>
+                    <div className="form-row form-row--multiselect">
                         <h4>Select Test Case Items (up to {MAX_SELECTIONS})</h4>
 
                         <select

@@ -209,6 +209,70 @@ label + input {
   margin-bottom: 18px;
 }
 
+/* --- Standard form rows (works with your current <h4> + <input> pattern) --- */
+.form-row {
+  display: grid;
+  grid-template-columns: 120px minmax(0, 450px);
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+/* Normalize the left column “label” (your h4) */
+.form-row > h4 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+}
+
+/* Make inputs/selects fill the right column consistently */
+.form-row input,
+.form-row select,
+.form-row textarea {
+  width: 100%;
+  max-width: 450px; /* keep your existing cap */
+}
+
+/* If you have a button in the same row (like Product Set) */
+.form-row--with-button {
+  grid-template-columns: 120px minmax(0, 360px) auto;
+}
+
+@media (max-width: 640px) {
+  .form-row,
+  .form-row--with-button {
+    grid-template-columns: 1fr;
+    gap: 6px;
+    align-items: stretch;
+  }
+
+  .form-row input,
+  .form-row select,
+  .form-row textarea {
+    max-width: none;
+  }
+}
+
+/* Multiselect row: same label styling, taller control */
+.form-row--multiselect {
+  align-items: start;            /* label aligns to top of the box */
+}
+
+.form-row--multiselect > h4 {
+  padding-top: 10px;             /* lines up with select padding */
+}
+
+/* Don’t let your global select styling (dropdown arrow, padding) mess with multi */
+select[multiple].multiselect {
+  max-width: 450px;
+  height: 150px;
+  padding: 10px 12px;
+  background-image: none;        /* remove the dropdown arrow */
+  appearance: auto;              /* let the browser render multiselect normally */
+}
+
+
 /* The “Connect” link/button */
 button,
 input[type="submit"],

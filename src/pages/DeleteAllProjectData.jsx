@@ -41,7 +41,7 @@ function DeleteAllProjectData() {
         <div>
             <h1>Delete All Project Data</h1>
             <p>! WARNING: This task will delete ALL data in your project</p>
-            <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+            <div className='form-row'>
                 <h4>Project</h4>
                 <select
                     value={selectedProject}

@@ -81,7 +81,7 @@ function BatchItemGenerator() {
                 or test data.
             </p>
             <div>
-                <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+                <div className='form-row'>
                     <h4>Project</h4>
                     <select value={selectedProject} onChange={(e) => setSelectedProject(e.target.value)}>
                         <option value="">Select a project</option>
@@ -92,7 +92,7 @@ function BatchItemGenerator() {
                 </div>
                 {trackerOptions.length > 0 && (
                     <div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginTop: '1rem' }}>
+                        <div className='form-row'>
                             <h4>Tracker</h4>           
                             <select value={selectedTrackerId} onChange={handleTrackerSelect}>
                             <option value="">Select a tracker</option>
@@ -103,7 +103,7 @@ function BatchItemGenerator() {
                             ))}
                             </select>
                         </div>
-                        <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+                        <div className='form-row'>
                             <h4>Item Count</h4>
                             <input
                                 type="text"

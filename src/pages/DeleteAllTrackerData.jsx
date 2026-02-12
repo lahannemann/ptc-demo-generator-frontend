@@ -45,7 +45,7 @@ function DeleteAllTrackerData() {
         <div>
             <h1>Delete All Tracker Data</h1>
             <p>! WARNING: This task will delete ALL items in the selected tracker below</p>
-            <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+            <div className='form-row'>
                 <h4>Project</h4>
                 <select value={selectedProject} onChange={(e) => setSelectedProject(e.target.value)}>
                     <option value="">Select a project</option>
@@ -56,7 +56,7 @@ function DeleteAllTrackerData() {
             </div>
             {trackerOptions.length > 0 && (
                 <div>
-                    <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+                    <div className='form-row'>
                         <h4>Tracker</h4>
                         <select value={selectedTrackerId} onChange={(e) => setSelectedTrackerId(e.target.value)}>
                             <option value="">Select a tracker</option>
