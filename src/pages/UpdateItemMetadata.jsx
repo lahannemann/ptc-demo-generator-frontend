@@ -113,7 +113,8 @@ function UpdateItemMetadata() {
                                     key={item.id}
                                     onClick={() => handleItemToggle(item.id)}
                                     style={{
-                                        backgroundColor: selectedTrackerItems.includes(item.id) ? '#5bb73b' : 'white'
+                                        backgroundColor: selectedTrackerItems.includes(item.id) ? '#5bb73b' : 'white',
+                                        color: selectedTrackerItems.includes(item.id) ? 'white' : 'black'
                                     }}
                                 >
                                     {item.name}

@@ -28,6 +28,11 @@ function GenerateTraceability() {
 
     const { items: upstreamTrackerItems, error: itemsError, reload } = getTrackerItems(upstreamSelectedTrackerId);
 
+    // Clear any selected upstream items when the upstream tracker changes
+    useEffect(() => {
+        setSelectedTrackerItems([]);
+    }, [upstreamSelectedTrackerId]);
+
 
     // unified async action state (replaces local isGenerating/show*Popup/responseMessage)
     const {
@@ -125,7 +130,8 @@ function GenerateTraceability() {
                                     key={item.id}
                                     onClick={() => handleItemToggle(item.id)}
                                     style={{
-                                        backgroundColor: selectedTrackerItems.includes(item.id) ? '#5bb73b' : 'white'
+                                        backgroundColor: selectedTrackerItems.includes(item.id) ? '#5bb73b' : 'white',
+                                        color: selectedTrackerItems.includes(item.id) ? 'white' : 'black'
                                     }}
                                 >
                                     {item.name}

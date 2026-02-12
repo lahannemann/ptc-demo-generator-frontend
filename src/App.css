@@ -300,6 +300,7 @@ input::placeholder {
   padding-top: 1rem;
 }
 
+
 /* Responsive: sidebar collapses above content */
 @media (max-width: none){
   .layout{

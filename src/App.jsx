@@ -17,7 +17,7 @@ import DeleteAllTrackerData from './pages/DeleteAllTrackerData.jsx';
 import BatchItemGenerator from './pages/BatchItemGeneration.jsx';
 
 function App() {
-  
+
   const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
   const [backendError, setBackendError] = React.useState(false);
 
@@ -45,9 +45,7 @@ function App() {
       {/* Header: logo + small title, pinned top-left */}
       <header className="header" role="banner">
         <a
-          href="https://codebeamer.com"
-          target="_blank"
-          rel="noreferrer"
+          href="/"
           className="brand"
         >
           <img src={cbLogo} alt="Codebeamer logo" className="logo" />
