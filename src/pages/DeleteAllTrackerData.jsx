@@ -27,6 +27,7 @@ function DeleteAllTrackerData() {
     } = useAsyncPopupAction();
 
     const deleteItems = async () => {
+        validate();
         const res = await fetch(`${API_BASE_URL}/api/delete_tracker_data`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -39,6 +40,16 @@ function DeleteAllTrackerData() {
         const data = await res.json();
         if (!res.ok) throw new Error(data?.detail || 'Failed to delete tracker data');
         return data?.detail || 'Tracker data was deleted successfully.';
+    };
+
+        const validate = () => {
+        if (!selectedProject) {
+            throw new Error("Please select a project.");
+        }
+
+        if (!selectedTrackerId) {
+            throw new Error("Please select a tracker.");
+        }
     };
 
     return (

@@ -55,6 +55,7 @@ function BatchItemGenerator() {
     };
 
     const generateBatchItems = async () => {
+        validate();
         const res = await fetch(`${API_BASE_URL}/api/generate_batch_items`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -69,6 +70,21 @@ function BatchItemGenerator() {
         const data = await res.json();
         if (!res.ok) throw new Error(data?.detail || 'Failed to generate tracker items');
         return data?.detail || 'Tracker items were generated successfully.';
+    };
+
+    const validate = () => {
+        if (!selectedProject) {
+            throw new Error("Please select a project.");
+        }
+
+        if (!selectedTrackerId) {
+            throw new Error("Please select a tracker.");
+        }
+
+        const count = Number(itemCount);
+        if (!Number.isInteger(count) || count <= 0) {
+            throw new Error("Item count must be a positive whole number.");
+        }
     };
 
     return (

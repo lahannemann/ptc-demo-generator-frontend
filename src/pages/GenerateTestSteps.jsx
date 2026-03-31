@@ -43,6 +43,7 @@ function GenerateTestSteps() {
     };
 
     const generateTestSteps = async () => {
+        validate();
         const res = await fetch(`${API_BASE_URL}/api/generate_test_steps`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -56,6 +57,20 @@ function GenerateTestSteps() {
         const data = await res.json();
         if (!res.ok) throw new Error(data?.detail || 'Failed to generate test steps');
         return data?.detail || 'Test steps were generated successfully.';
+    };
+
+    const validate = () => {
+        if (!selectedProject) {
+            throw new Error("Please select a project.");
+        }
+
+        if (!selectedTrackerId) {
+            throw new Error("Please select a test case tracker.");
+        }
+
+        if (!selectedTrackerItems || selectedTrackerItems.length === 0) {
+            throw new Error("Please select at least one test case.");
+        }
     };
 
 

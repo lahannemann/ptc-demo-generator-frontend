@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import useSessionGuard from "../hooks/useSessionGuard";
 import getProjects from '../hooks/getProjects';
 import getTrackers from '../hooks/getTrackers';
+import getTrackerChoiceFields from '../hooks/getTrackerChoiceFields';
 import getTrackerItems from '../hooks/getTrackerItems';
 
 
@@ -19,6 +20,7 @@ function GenerateTraceability() {
     const { trackerOptions: downstreamTrackerOptions, error: downstreamTrackerError } = getTrackers(selectedDownstreamProject);
     const [upstreamSelectedTrackerId, setUpstreamSelectedTrackerId] = useState('');
     const [downstreamSelectedTrackerId, setDownstreamSelectedTrackerId] = useState('');
+    const [downstreamReferenceField, setDownstreamReferenceField] = useState('');
     const [itemCount, setItemCount] = useState('');
 
     const { projectNames, error: projectsError } = getProjects(sessionReady);
@@ -26,7 +28,8 @@ function GenerateTraceability() {
     const [selectedTrackerItems, setSelectedTrackerItems] = useState([]);
     const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-    const { items: upstreamTrackerItems, error: itemsError, reload } = getTrackerItems(upstreamSelectedTrackerId);
+    const { items: upstreamTrackerItems, error: itemsError, reload: reloadUpstream } = getTrackerItems(upstreamSelectedTrackerId);
+    const { fields: downstreamReferenceFields, error: fieldError, reload: reloadDownstream } = getTrackerChoiceFields(downstreamSelectedTrackerId);
 
     // Clear any selected upstream items when the upstream tracker changes
     useEffect(() => {
@@ -58,6 +61,7 @@ function GenerateTraceability() {
     };
 
     const generateItems = async () => {
+        validate();
         const res = await fetch(`${API_BASE_URL}/api/generate_traceability`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -66,6 +70,7 @@ function GenerateTraceability() {
                 upstream_tracker_id: upstreamSelectedTrackerId,
                 selected_tracker_items: upstreamTrackerItems.filter(item => selectedTrackerItems.includes(item.id)),
                 downstream_tracker_id: downstreamSelectedTrackerId,
+                downstream_field_id: downstreamReferenceField,
                 downstream_count: parseInt(itemCount),
                 additional_rules: '' // need to add a field for this
             }),
@@ -76,6 +81,36 @@ function GenerateTraceability() {
         return data?.detail || 'Traceability was generated successfully.';
     };
 
+    const validate = () => {
+        if (!selectedUpstreamProject) {
+            throw new Error("Please select an upstream project.");
+        }
+
+        if (!selectedDownstreamProject) {
+            throw new Error("Please select a downstream project.");
+        }
+
+        if (!upstreamSelectedTrackerId) {
+            throw new Error("Please select an upstream tracker.");
+        }
+
+        if (!downstreamSelectedTrackerId) {
+            throw new Error("Please select a downstream tracker.");
+        }
+
+        if (!selectedTrackerItems || selectedTrackerItems.length === 0) {
+            throw new Error("Please select at least one upstream tracker item.");
+        }
+
+        if (!downstreamReferenceField) {
+            throw new Error("Please select downstream reference field.");
+        }
+
+        const count = Number(itemCount);
+        if (!Number.isInteger(count) || count <= 0) {
+            throw new Error("Item count must be a positive whole number.");
+        }
+    };
 
     return (
         <div>
@@ -175,6 +210,25 @@ function GenerateTraceability() {
                                 ))}
                             </select>
                         </div>
+                        {downstreamReferenceFields.length > 0 && (
+                            <div>
+                                <div className="form-row">
+                                    <h4>Reference Field</h4>
+                                    <select
+                                        value={downstreamReferenceField}
+                                        onChange={(e) => setDownstreamReferenceField(e.target.value)}
+                                    >
+                                        <option value="">Select reference field</option>
+
+                                        {downstreamReferenceFields.map((field) => (
+                                            <option key={field.id} value={field.id}>
+                                                {field.name}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                            </div>
+                        )}
                         <div className='form-row'>
                             <h4>Downstream Items per Upstream</h4>
                             <input
