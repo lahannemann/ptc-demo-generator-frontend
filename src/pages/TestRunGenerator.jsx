@@ -16,8 +16,9 @@ function TestRunGenerator() {
     const [selectedProject, setSelectedProject] = useState('');
 
     const { trackerOptions, error: trackerError } = getTrackers(selectedProject);
-    const [selectedTrackerId, setSelectedTrackerId] = useState('');
-    const { items: trackerItems, error: itemsError, reload } = getTrackerItems(selectedTrackerId);
+    const [selectedTestCaseTrackerId, setSelectedTestCaseTrackerId] = useState('');
+    const [selectedTestRunTrackerId, setSelectedTestRunTrackerId] = useState('');
+    const { items: trackerItems, error: itemsError, reload } = getTrackerItems(selectedTestCaseTrackerId);
     const [selectedTrackerItems, setSelectedTrackerItems] = useState([]);
 
     const handleSelectAll = () => {
@@ -120,6 +121,45 @@ function TestRunGenerator() {
         showFailurePopup, setShowFailurePopup,
     } = useAsyncPopupAction();
 
+    const generateTestRun = async () => {
+        validate();
+        const res = await fetch(`${API_BASE_URL}/api/generate_test_run`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({
+                test_run_tracker_id: selectedTestRunTrackerId,
+                test_case_tracker_id: selectedTestCaseTrackerId,
+                item_id_list: selectedTrackerItems,
+                passed_count: resultDist.passed,
+                failed_count: resultDist.failed,
+                blocked_count: resultDist.blocked
+            }),
+        });
+
+        const data = await res.json();
+        if (!res.ok) throw new Error(data?.detail || 'Failed to generate test run.');
+        return data?.detail || 'Test run was generated successfully.';
+    };
+
+    const validate = () => {
+        if (!selectedProject) {
+            throw new Error("Please select a project.");
+        }
+
+        if (!selectedTestCaseTrackerId) {
+            throw new Error("Please select a test case tracker.");
+        }
+
+        if (!selectedTestRunTrackerId) {
+            throw new Error("Please select a test run tracker.");
+        }
+
+        if (!selectedTrackerItems || selectedTrackerItems.length === 0) {
+            throw new Error("Please select at least one test case.");
+        }
+    };
+
     return (
         <div>
             <h1>Test Run Generator</h1>
@@ -143,12 +183,30 @@ function TestRunGenerator() {
                 {trackerOptions.length > 0 && (
                     <div>
                         <div className='form-row'>
-                            <h4>Tracker</h4>
-                            <select value={selectedTrackerId} onChange={(e) => {
+                            <h4>Test Case Tracker</h4>
+                            <select value={selectedTestCaseTrackerId} onChange={(e) => {
                                 const trackerId = e.target.value;
-                                setSelectedTrackerId(trackerId);
+                                setSelectedTestCaseTrackerId(trackerId);
                             }}>
                                 <option value="">Select Test Case tracker</option>
+                                {trackerOptions.map((tracker) => (
+                                    <option key={tracker.id} value={tracker.id}>
+                                        {tracker.name}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                    </div>
+                )}
+                {trackerOptions.length > 0 && (
+                    <div>
+                        <div className='form-row'>
+                            <h4>Test Run Tracker</h4>
+                            <select value={selectedTestRunTrackerId} onChange={(e) => {
+                                const trackerId = e.target.value;
+                                setSelectedTestRunTrackerId(trackerId);
+                            }}>
+                                <option value="">Select Test Run tracker</option>
                                 {trackerOptions.map((tracker) => (
                                     <option key={tracker.id} value={tracker.id}>
                                         {tracker.name}
@@ -238,7 +296,7 @@ function TestRunGenerator() {
             <div>
                 <AsyncActionButton
                     isRunning={isRunning}
-                    onRun={() => run(generateTestSteps)}
+                    onRun={() => run(generateTestRun)}
                     label="Generate"
                     busyLabel="Generating..."
                     successOpen={showSuccessPopup}

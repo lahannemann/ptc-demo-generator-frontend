@@ -45,6 +45,7 @@ function UpdateItemStatuses() {
     };
 
     const updateStatuses = async () => {
+        validate();
         const res = await fetch(`${API_BASE_URL}/api/update_item_statuses`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -58,6 +59,20 @@ function UpdateItemStatuses() {
         const data = await res.json();
         if (!res.ok) throw new Error(data?.detail || 'Failed to update statuses');
         return data?.detail || 'Statuses were updated successfully.';
+    };
+
+    const validate = () => {
+        if (!selectedProject) {
+            throw new Error("Please select a project.");
+        }
+
+        if (!selectedTrackerId) {
+            throw new Error("Please select a tracker.");
+        }
+
+        if (!selectedTrackerItems || selectedTrackerItems.length === 0) {
+            throw new Error("Please select at least one tracker item.");
+        }
     };
 
 
@@ -104,7 +119,13 @@ function UpdateItemStatuses() {
                     <div className="form-row form-row--multiselect">
                         <h4>Select Tracker Items</h4>
                         <select multiple style={{ width: '500px', height: '250px' }}>
-                            <option onClick={handleSelectAll}>
+                            <option
+                                onClick={handleSelectAll}
+                                onMouseDown={(e) => {
+                                    // Prevent native select behavior (which requires Ctrl/⌘)
+                                    e.preventDefault();
+                                }}
+                            >
                                 {selectedTrackerItems.length === trackerItems.length ? 'Deselect All' : 'Select All'}
                             </option>
                             {trackerItems.map(item => (

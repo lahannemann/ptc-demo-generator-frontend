@@ -23,6 +23,7 @@ function DeleteAllProjectData() {
     } = useAsyncPopupAction();
 
     const deleteItems = async () => {
+        validate();
         const res = await fetch(`${API_BASE_URL}/api/delete_project_data`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -35,6 +36,12 @@ function DeleteAllProjectData() {
         const data = await res.json();
         if (!res.ok) throw new Error(data?.detail || 'Failed to delete project data');
         return data?.detail || 'Project data was deleted successfully.';
+    };
+
+    const validate = () => {
+        if (!selectedProject) {
+            throw new Error("Please select a project.");
+        }
     };
 
     return (

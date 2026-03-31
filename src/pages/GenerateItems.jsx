@@ -33,6 +33,7 @@ function GenerateItems() {
 
     // page-specific API call
     const generateItems = async () => {
+        validate();
         const res = await fetch(`${API_BASE_URL}/api/generate_items`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -50,6 +51,24 @@ function GenerateItems() {
         return data?.detail || 'Items were generated successfully.';
     };
 
+    const validate = () => {
+        if (!selectedProject) {
+            throw new Error("Please select a project.");
+        }
+
+        if (!selectedTrackerId) {
+            throw new Error("Please select a tracker.");
+        }
+
+        const count = Number(itemCount);
+        if (!Number.isInteger(count) || count <= 0) {
+            throw new Error("Item count must be a positive whole number.");
+        }
+
+        if (!selectedRequirementType) {
+            throw new Error("Please select a requirement type.");
+        }
+    };
 
     return (
         <div>

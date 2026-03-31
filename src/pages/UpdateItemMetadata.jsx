@@ -19,7 +19,7 @@ function UpdateItemMetadata() {
     const [selectedTrackerId, setSelectedTrackerId] = useState('');
     const { items: trackerItems, error: itemsError, reload } = getTrackerItems(selectedTrackerId);
     const [selectedTrackerItems, setSelectedTrackerItems] = useState([]);
-    
+
     const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
     // unified async action state (replaces local isGenerating/show*Popup/responseMessage)
@@ -46,6 +46,7 @@ function UpdateItemMetadata() {
     };
 
     const updateMetadata = async () => {
+        validate();
         const res = await fetch(`${API_BASE_URL}/api/update_item_metadata`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -60,6 +61,20 @@ function UpdateItemMetadata() {
         const data = await res.json();
         if (!res.ok) throw new Error(data?.detail || 'Failed to update metadata');
         return data?.detail || 'Metadata was updated successfully.';
+    };
+
+    const validate = () => {
+        if (!selectedProject) {
+            throw new Error("Please select a project.");
+        }
+
+        if (!selectedTrackerId) {
+            throw new Error("Please select a tracker.");
+        }
+
+        if (!selectedTrackerItems || selectedTrackerItems.length === 0) {
+            throw new Error("Please select at least one tracker item.");
+        }
     };
 
     return (
@@ -105,7 +120,13 @@ function UpdateItemMetadata() {
                     <div className="form-row form-row--multiselect">
                         <h4>Select Tracker Items</h4>
                         <select multiple style={{ width: '250px', height: '150px' }}>
-                            <option onClick={handleSelectAll}>
+                            <option
+                                onClick={handleSelectAll}
+                                onMouseDown={(e) => {
+                                    // Prevent native select behavior (which requires Ctrl/⌘)
+                                    e.preventDefault();
+                                }}
+                            >
                                 {selectedTrackerItems.length === trackerItems.length ? 'Deselect All' : 'Select All'}
                             </option>
                             {trackerItems.map(item => (
