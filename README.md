@@ -1,5 +1,5 @@
 # Run locally
 
-npm run dev
+`npm run dev`
 
 visit: http://localhost:5173/
