@@ -64,6 +64,9 @@ function GenerateItems() {
         if (!Number.isInteger(count) || count <= 0) {
             throw new Error("Item count must be a positive whole number.");
         }
+        if (count > 30) {
+            throw new Error("This app uses live AI models, which are expensive to run. It’s intended for demo‑scale data only. Please reduce the number of items and try again.")
+        }
 
         if (!selectedRequirementType) {
             throw new Error("Please select a requirement type.");
@@ -81,15 +84,6 @@ function GenerateItems() {
                 items will not be linked to any existing items and are intended to
                 serve as the starting point for decomposition in other trackers.
             </p>
-            {responseMessage && (
-                <div
-                    style={{
-                        marginTop: '1rem',
-                    }}
-                >
-                    {responseMessage}
-                </div>
-            )}
             <div>
                 <div className='form-row'>
                     <h4>Requirement Type</h4>
